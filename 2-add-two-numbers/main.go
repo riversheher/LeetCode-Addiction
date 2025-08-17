@@ -1,8 +1,21 @@
-package main
+package add_two_numbers
 
 type ListNode struct {
 	Val  int
 	Next *ListNode
+}
+
+func (list *ListNode) toInt() int {
+	if list == nil {
+		return 0
+	}
+
+	value := 0
+	for i, curr := 1, list; curr != nil; i, curr = i*10, curr.Next {
+		value += curr.Val * i
+	}
+
+	return value
 }
 
 func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
