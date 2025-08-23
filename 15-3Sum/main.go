@@ -3,78 +3,76 @@ package threesum
 const TARGET int = 0
 
 func threeSum(nums []int) [][]int {
-	result := make([][]int, 0)
+	sortedNums := quickSort(nums)
 
-	// If there are fewer than 3 numbers, return an empty result
-	if len(nums) < 3 {
-		return result
-	}
+	//To be returned
+	result := [][]int{}
 
-	// Create a set of unique numbers, tracking how many times each number appears
-	uniqueNums := make(map[int]int)
-	for _, num := range nums {
-		uniqueNums[num]++
-	}
-
-	// Iterate over the unique numbers
-	for num1 := range uniqueNums {
-		for num2 := range uniqueNums {
-			if num1 == num2 {
-				//check if we have enough of the same number to form a triplet
-				if uniqueNums[num1] < 2 {
-					continue
-				}
-			}
-
-			//find what the required number is.
-			required := 0 - (num1 + num2)
-
-			//create a mini map of the numbers we require, tracking how many of them we need
-			currNums := make(map[int]int)
-			currNums[num1]++
-			currNums[num2]++
-			currNums[required]++
-
-			// Check if we have enough of the required number
-			for _, count := range currNums {
-				if count > uniqueNums[required] {
-					// If we need more of the required number than we have, skip this pair
-					continue
-				}
-			}
-
-			// Check if the required number is in the set of unique numbers
-			if _, exists := uniqueNums[required]; exists {
-				triplet := []int{num1, num2, required}
-
-				// Sort the triplet to ensure uniqueness
-				if triplet[0] > triplet[1] {
-					triplet[0], triplet[1] = triplet[1], triplet[0]
-				}
-				if triplet[0] > triplet[2] {
-					triplet[0], triplet[2] = triplet[2], triplet[0]
-				}
-				if triplet[1] > triplet[2] {
-					triplet[1], triplet[2] = triplet[2], triplet[1]
-				}
-
-				// check if the triplet is already in the result
-				exists := false
-
-				for _, existingTriplet := range result {
-					//we only need to check if two numbers are equal, since the third one is derived from the first two.
-					if triplet[0] == existingTriplet[0] && triplet[1] == existingTriplet[1] {
-						exists = true
-					}
-				}
-
-				if !exists {
-					result = append(result, triplet)
-				}
-			}
-
+	//Iterate through the sorted array using three pointers, smallest, middle, and largest
+	for small := 0; small < len(sortedNums)-2; small++ {
+		//Skip duplicates for the smallest pointer
+		if small > 0 && sortedNums[small] == sortedNums[small-1] {
+			continue
 		}
+		middle, largest := small+1, len(sortedNums)-1
+
+		//While the middle pointer is less than the largest pointer (this skips duplicate processing)
+		for middle < largest {
+			sum := sortedNums[small] + sortedNums[middle] + sortedNums[largest]
+			if sum == TARGET {
+				result = append(result, []int{sortedNums[small], sortedNums[middle], sortedNums[largest]})
+
+				//move middle and largest pointers
+				middle++
+				largest--
+
+				//Skip duplicates for the middle pointer
+				for middle < largest && sortedNums[middle] == sortedNums[middle-1] {
+					middle++
+				}
+				//Skip duplicates for the largest pointer
+				for middle < largest && sortedNums[largest] == sortedNums[largest+1] {
+					largest--
+				}
+			} else if sum < TARGET {
+				//If the sum is less than the target, move the middle pointer up
+				middle++
+			} else {
+				//If the sum is greater than the target, move the largest pointer down
+				largest--
+			}
+		}
+
 	}
 
 	return result
+}
+
+// This would be quicker using the sort package, but this is a custom implementation of quicksort
+func quickSort(nums []int) []int {
+	//Return if len(nums) is less than 2 (only one element)
+	if len(nums) < 2 {
+		return nums
+	}
+
+	//Indices for the quicksort algorithm
+	left, right, pivotIdx := 0, len(nums)-1, len(nums)/2
+	//Swap pivot into the right
+	nums[pivotIdx], nums[right] = nums[right], nums[pivotIdx]
+
+	for i := range nums {
+		if nums[i] < nums[right] {
+			nums[left], nums[i] = nums[i], nums[left]
+			left++
+		}
+	}
+
+	//Swap the pivot back to its correct position
+	nums[left], nums[right] = nums[right], nums[left]
+
+	//Recursively sort the left and right partitions
+	quickSort(nums[:left])
+	quickSort(nums[left+1:])
+
+	return nums
 }
