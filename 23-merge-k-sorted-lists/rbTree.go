@@ -174,6 +174,13 @@ func (tree *RedBlackTree) Fix(n *Node) {
 				grandparent.Color = true         // Grandparent becomes red
 				grandparent.Parent.Color = false // Parent of grandparent becomes black
 
+			} else if n.IsRightChild() && n.Parent.IsRightChild() {
+				// case 2d: n is a right child of a right parent, rotate left on grandparent
+				grandparent := n.Parent.Parent
+				tree.LeftRotate(grandparent)
+
+				grandparent.Color = true         // Grandparent becomes red
+				grandparent.Parent.Color = false // Parent of grandparent becomes black
 			}
 		}
 	}

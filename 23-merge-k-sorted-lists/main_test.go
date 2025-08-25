@@ -90,6 +90,70 @@ func TestRightRotate(t *testing.T) {
 
 }
 
+func TestFixCase1(t *testing.T) {
+	tree := NewTree()
+
+	root := &Node{
+		Value: 17,
+		Color: false, // Black
+	}
+
+	tree.Root = root
+
+	L := &Node{
+		Value:  9,
+		Color:  false, // Black
+		Parent: root,
+	}
+
+	R := &Node{
+		Value:  19,
+		Color:  false, // Black
+		Parent: root,
+	}
+
+	RR := &Node{
+		Value:  75,
+		Color:  true, // Red
+		Parent: R,
+	}
+
+	RRL := &Node{
+		Value:  24,
+		Color:  true, // Red
+		Parent: RR,
+	}
+
+	root.Left = L
+	root.Right = R
+	R.Left = RR
+	RR.Left = RRL
+
+	tree.Fix(RRL)
+
+	if tree.Root != root {
+		t.Errorf("Expected root to be %v, got %v", root.Value, tree.Root.Value)
+	}
+	if root.Color != false {
+		t.Errorf("Expected root color to be black, got %v", root.Color)
+	}
+	if root.Left != L {
+		t.Errorf("Expected root left child to be %v, got %v", L.Value, root.Left.Value)
+	}
+	if root.Right != RR {
+		t.Errorf("Expected root right child to be %v, got %v", R.Value, root.Right.Value)
+	}
+	if root.Right.Color != false {
+		t.Errorf("Expected RR color to be black, got %v", root.Right.Color)
+	}
+	if root.Right.Left != R {
+		t.Errorf("Expected RR left child to be %v, got %v", R.Value, root.Right.Left.Value)
+	}
+	if root.Right.Left.Color != true {
+		t.Errorf("Expected R color to be red, got %v", root.Right.Left.Color)
+	}
+}
+
 func TestNoLists(t *testing.T) {
 	lists := []*ListNode{}
 	expected := (*ListNode)(nil)
