@@ -13,4 +13,5 @@ This repository also contains test cases.  These can be used as a resource if yo
 |#|Title|Difficulty|Date|
 |-|-|-|-|
 |2|Add Two Numbers|Med|Aug-16-2025|
+|15|3Sum|Med|Aug-23-2025|
 |20|Valid Parentheses|Easy|Aug-16-2025|
