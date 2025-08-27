@@ -16,3 +16,4 @@ This repository also contains test cases.  These can be used as a resource if yo
 |15|3Sum|Med|Aug-23-2025|
 |20|Valid Parentheses|Easy|Aug-16-2025|
 |295|Find Median in Data Stream|Hard|Aug-24-2025|
+|98|Validate Binary Search Tree|Med|Aug-25-2025|
